@@ -1,0 +1,26 @@
+{
+  "name": "paddle-test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "webpack server --config webpack.dev.js",
+    "build": "webpack --config webpack.prod.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@paddlejs-mediapipe/opencv": "0.0.4",
+    "@paddlejs-models/ocr": "1.2.3",
+    "@paddlejs/paddlejs-backend-webgl": "1.2.9",
+    "@paddlejs/paddlejs-core": "2.2.0"
+  },
+  "devDependencies": {
+    "d3-polygon": "^2.0.0",
+    "js-clipper": "^1.0.1",
+    "number-precision": "^1.5.0",
+    "webpack": "^5.88.2",
+    "webpack-cli": "^4.7.2",
+    "webpack-dev-server": "^4.15.1"
+  }
+}

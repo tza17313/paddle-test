@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>paddle ocr_rec demo</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <style>
+        body {
+            margin: 0 auto;
+            width: 100%;
+            height: 100%;
+        }
+        .wrapper {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            margin: 0 auto;
+        }
+        #isLoading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, .5);
+        }
+        #isLoading .loading-text {
+            color: #fff;
+            font-size: 24px;
+            text-align: center;
+            line-height: 100vh;
+        }
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <img id="image" src="">
+    <div id="tool">
+        <input type="file" id="uploadImg">
+    </div>
+    <canvas id="canvas"></canvas>
+    <div id="txt"></div>
+</div>
+
+<div id="isLoading">
+    <p class="loading-text center">loading中……</p>
+</div>
+<script src="./ocr.min.js" type="application/javascript"></script>
+<script>
+    const loading = document.getElementById('isLoading');
+    const txt = document.getElementById('txt');
+    const inputElement = document.getElementById('uploadImg');
+    const imgElement = document.getElementById('image');
+    const canvasOutput = document.getElementById('canvas');
+
+    load().then(() => {
+
+    }).catch((e) => {
+        console.log("catch error:", e)
+    })
+
+    async function load() {
+        await ocr.init('./models/ocr_v2_det_new/model.json','./models/ocr_v2_rec_320/model.json');
+        // await ocr.init();
+        loading.style.display = 'none';
+    }
+
+    inputElement.addEventListener('change', (e) => {
+        // @ts-ignore
+        // imgElement.src = URL.createObjectURL(e.target.files[0]);
+
+        const reader = new FileReader();
+        reader.onload = () => {
+            // @ts-ignore
+            imgElement.src = URL.createObjectURL(e.target.files[0]);
+            imgElement.onload = () => {
+                run(imgElement).then(() => {
+                    console.log("done", )
+                }).catch((e) => {
+                    console.log("catch error:", e)
+                })
+            };
+        };
+        reader.readAsDataURL(e.target.files[0]);
+
+
+    }, false);
+
+    async function run(imgElement) {
+        txt.innerHTML = '';
+        // 获取文本检测坐标及识别内容
+        // const res = await ocr.recognize(imgElement, { canvas: canvasOutput });
+        const res = await ocr.recognize(imgElement, {});
+        if (res.text?.length) {
+            console.log("res.text", res.text)
+            // 页面展示识别内容
+            txt.innerHTML = res.text.reduce((total, cur) => total + `<p>${cur}</p>`);
+        }
+    }
+
+</script>
+</body>
+</html>
